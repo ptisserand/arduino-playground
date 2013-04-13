@@ -1,6 +1,7 @@
 #include <IRremote.h>
 
-int RECV_PIN = 9;
+int RECV_PIN = 5;
+int START_LED = 8;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
@@ -32,7 +33,11 @@ void setup()
 {
   Serial1.begin(9600);
   irrecv.enableIRIn(); // Start the receiver
+  for (index = 0; index < nb_elem; ++index) {
+    pinMode(START_LED + index, OUTPUT);
+  }
   Serial1.println("GO ");
+
 }
 
 void loop() {
@@ -44,7 +49,9 @@ void loop() {
       for (index = 0; index < nb_elem; ++index) {
 	if (keys[index] == val) {
 	  key_name = key_names[index];
-	  break;
+	  digitalWrite(START_LED + index, HIGH);
+	} else {
+	  digitalWrite(START_LED + index, LOW);
 	}
       }
       if (NULL != key_name) {
